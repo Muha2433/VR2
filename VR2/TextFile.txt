@@ -1,0 +1,20 @@
+﻿in ShareDetailPage we select from radio button  
+some set of customer then click on asking sale button 
+when click on asking Group sale button 
+we call post api that
+send object contain {
+list of selecded customer{uname,id},
+share ID
+}
+and letus call previous object AskingRequest
+//// 
+Know In backend 
+the called api will do the following in order :
+
+1) get name of share by shareID
+2)using signal R send message to all user that their ID in AskingRequest object
+and this message saies "The {user name of asker } wanna to colaborate with you in selling {ShareID}"
+note helper [get user name of asker by its id that exist in  token that exist in header of http request post]
+with two button accept , reject
+3)Wait 4 minut 
+4)If all customers say yes before four minutes have passed since the message arrived, we will request the sale. If four minutes have passed and no customer has responded, we will not create the sale request. If a customer responds with no response before four minutes have passed, we will cancel the sale request.
