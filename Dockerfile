@@ -1,5 +1,5 @@
 # ---------- Stage 1: Build ----------
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy csproj and restore as distinct layers for better caching
@@ -9,17 +9,19 @@ RUN dotnet restore ./VR2/VR2.csproj
 # Copy the rest of the application source code
 COPY . .
 
-# Build the project
+# Build and publish the project
 WORKDIR /src/VR2
 RUN dotnet publish VR2.csproj -c Release -o /app/publish --no-restore
 
 # ---------- Stage 2: Runtime ----------
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
+
+# Copy published app from build stage
 COPY --from=build /app/publish .
 
-# Expose the API port
+# Expose the port the app listens on
 EXPOSE 80
 
-# Entry point
+# Run the application
 ENTRYPOINT ["dotnet", "VR2.dll"]
