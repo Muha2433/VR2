@@ -2,15 +2,31 @@
 using CsvHelper.Configuration;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
+using VR2.Models;
 
 namespace VR2.Services
 {
-    public  class LoaderServices
+    public class LoaderServices
     {
+        private readonly ApplicationDbContext _dbContext;
+        public LoaderServices(ApplicationDbContext dbContext)
+        {
+            _dbContext=dbContext;
+        }
+        //public async Task<(bool,string)> FillDataBase()
+        //{
+        //    string filePath = @"D:\Final Fight\fileExcel\realtor-data.zip.csv";
+        //    int startRow = 500000;
+        //    int endRow = 500100;
 
-                public static async Task<List<VmHouse>> LoadHouses(string filePath, int startRow, int endRow)
-                    {
-                 var houseList = new List<VmHouse>();
+        //    Console.WriteLine($"📁 Loading data from: {filePath}");
+        //    var lstHouses = await LoadHouses(filePath, startRow, endRow);
+
+        //}
+
+        public async Task<List<VmHouse>> LoadHouses(string filePath, int startRow, int endRow)
+        {
+            var houseList = new List<VmHouse>();
 
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
@@ -100,7 +116,7 @@ namespace VR2.Services
             return houseList;
         }
 
-        public static async Task<(double Latitude, double Longitude)> GeocodeWithOpenCage(string street, string city, string state, string zip)
+        public async Task<(double Latitude, double Longitude)> GeocodeWithOpenCage(string street, string city, string state, string zip)
         {
             string apiKey = "2892708e50f84fab86548e46e5ed0e43"; // Replace with your actual key
             string fullAddress = $"{street}, {city}, {state}, {zip}";
@@ -142,15 +158,16 @@ namespace VR2.Services
             return (0, 0);
         }
 
-        private static double ParseDouble(string input)
+        private double ParseDouble(string input)
         {
             return double.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : 0;
         }
 
-        private static int ParseInt(string input)
+        private int ParseInt(string input)
         {
             return int.TryParse(input, out var result) ? result : 0;
         }
+    
     }
 
     public class VmHouse
@@ -168,5 +185,6 @@ namespace VR2.Services
         public double house_size { get; set; }
     }
 
-    }
+}
+    
 
