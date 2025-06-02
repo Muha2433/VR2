@@ -19,6 +19,8 @@ namespace VR2.Models
         public string? Country { get; set; } // البلد
         public string? City { get; set; } // المدينة
         public string? street { get; set; }
+
+        public string? state { get; set; }
         public string? Address { get; set; } // العنوان التفصيلي
         public string? ZipCode { get; set; } // الرمز البريدي
 

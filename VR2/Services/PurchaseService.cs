@@ -13,6 +13,12 @@ namespace VR2.Services
         {
             _dbContext = dbContext;
         }
+
+        public class BuyerPercentage
+        {
+            public ModelCustomer Buyer { get; set; }
+            public double Percentage { get; set; }
+        }
         public async Task CreatePurchase(ModelPurchase purChase,List<string> password , int RequestSaleID )
         {
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
@@ -27,9 +33,12 @@ namespace VR2.Services
                 if (requestSale == null)
                     throw new Exception("Sale request not found.");
 
-                List<(ModelCustomer,double)> lstBuyerwithPercentage = purChase.lstPurchaseCustomer
-                    .Select(pc => (pc.Buyer, pc.Percentage)).ToList();
-
+                List<BuyerPercentage> lstBuyerwithPercentage = purChase.lstPurchaseCustomer
+            .Select(pc => new BuyerPercentage
+          {
+              Buyer = pc.Buyer,
+              Percentage = pc.Percentage
+         }).ToList();
 
                 var lstSellers = requestSale.lstShare
                 .Select(s => s.InternalOwner)
@@ -54,13 +63,13 @@ namespace VR2.Services
             //TransferOwnerShip
             //endTransaction
         }
-        public async Task GenerateContract(List<(ModelCustomer,double)> lstBuyerwithPercentage, List<ModelShare> lstShare)
+        public async Task GenerateContract(List<BuyerPercentage> lstBuyerwithPercentage, List<ModelShare> lstShare)
         {
             //Chat Gpt Write accurate code
             
         }
         public async Task TransferOwnerShip(List<ModelShare> lstShare, 
-            List<(ModelCustomer Buyer, double Percentage)> lstBuyerWithPercentage, List<ModelCustomer> lstSellers)
+            List<BuyerPercentage> lstBuyerWithPercentage, List<ModelCustomer> lstSellers)
         {
             //Chat Gpt Write accurate code 
             List<ModelShare> lstNewShares = new List<ModelShare>();
@@ -125,21 +134,8 @@ namespace VR2.Services
         }
 
 
-
     }
     
 
 }
-////////////////////////////var requstSale= await _dbContext.RequestForSales.FindAsync(RequestSaleID);
-////////////////////////////var lstShare = requstSale.lstShare;
-////////////////////////////List<ModelCustomer> lstSellers = new List<ModelCustomer>();
-////////////////////////////foreach (var share in lstShare) 
-////////////////////////////{
-////////////////////////////    lstSellers.Add(share.InternalOwner);
-////////////////////////////}
-////////////////////////////List<(ModelCustomer,double)> lstBuyerwithPercentage = new List<(ModelCustomer,double)> ();
-////////////////////////////var lstPurchaseCustomer = purChase.lstPurchaseCustomer;
-////////////////////////////foreach(var pc in lstPurchaseCustomer) 
-////////////////////////////{
-////////////////////////////    lstBuyerwithPercentage.Add((pc.Buyer,pc.Percentage));
-////////////////////////////}
+

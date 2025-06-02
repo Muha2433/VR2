@@ -628,6 +628,9 @@ namespace VR2.Migrations
                     b.Property<string>("ZipCode")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("state")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("street")
                         .HasColumnType("nvarchar(max)");
 

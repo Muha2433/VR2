@@ -66,9 +66,3 @@ namespace VR2.Models
 //Furnished (Yes/No)
 //Price
 //Location
-
-
-
-
-
-
